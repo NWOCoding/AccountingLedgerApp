@@ -52,6 +52,30 @@ public class FinancialTracker {
 
         System.out.println("\nEnter " + type + " details:");
         System.out.print("Date (YYYY-MM-DD): ");
+        transaction.put("date", scanner.nextLine());
 
+        System.out.print("Time (HH:MM:SS): ");
+        transaction.put("time", scanner.nextLine());
 
+        System.out.print("Description: ");
+        transaction.put("description", scanner.nextLine());
+
+        System.out.print("Vendor: ");
+        transaction.put("vendor", scanner.nextLine());
+
+        System.out.print("Amount: ");
+        transaction.put("amount", scanner.nextLine());
+
+        return transaction;
     }
+
+    private static Transaction createTransaction(HashMap<String, String> transactionMap) {
+        LocalDate date = LocalDate.parse(transactionMap.get("date"));
+        LocalTime time = LocalTime.parse(transactionMap.get("time"));
+        String description = transactionMap.get("description");
+        String vendor = transactionMap.get("vendor");
+        double amount = Double.parseDouble(transactionMap.get("amount"));
+        return new Transaction(date, time, description, vendor, amount);
+    }
+}
+

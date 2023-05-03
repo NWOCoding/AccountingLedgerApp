@@ -14,5 +14,12 @@ public class TransactionManager {
 
     public void displayLedger() {
         System.out.println("Date       Time       Description            Vendor                Amount");
+        System.out.println("----------------------------------------------------------------------------");
 
+        for (Transaction transaction : this.transactions) {
+            System.out.println(transaction.toString());
+        }
+
+        System.out.println("----------------------------------------------------------------------------");
+    }
 }
