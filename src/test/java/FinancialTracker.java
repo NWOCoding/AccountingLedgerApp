@@ -1,9 +1,10 @@
-import java.util.*;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.*;
 
 public class FinancialTracker {
-
+    private static final String FILENAME = "transactions.csv";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -25,12 +26,14 @@ public class FinancialTracker {
                     transaction = readTransactionFromUser("Deposit");
                     Transaction deposit = createTransaction(transaction);
                     transactionManager.addTransaction(deposit);
+                    addTransactionToCSV(deposit);
                     System.out.println("\nDeposit saved.\n");
                     break;
                 case "P":
                     transaction = readTransactionFromUser("Payment");
                     Transaction payment = createTransaction(transaction);
                     transactionManager.addTransaction(payment);
+                    addTransactionToCSV(payment);
                     System.out.println("\nPayment saved.\n");
                     break;
                 case "L":
@@ -46,6 +49,7 @@ public class FinancialTracker {
             }
         }
     }
+
     private static HashMap<String, String> readTransactionFromUser(String type) {
         Scanner scanner = new Scanner(System.in);
         HashMap<String, String> transaction = new HashMap<>();
@@ -77,5 +81,52 @@ public class FinancialTracker {
         double amount = Double.parseDouble(transactionMap.get("amount"));
         return new Transaction(date, time, description, vendor, amount);
     }
-}
 
+    private static void addTransactionToCSV(Transaction transaction) {
+        try {
+            FileWriter fileWriter = new FileWriter(FILENAME, true);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.println(transaction.toString());
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void updateTransactionCSV(List<Transaction> transactions) {
+        try {
+            FileWriter fileWriter = new FileWriter(FILENAME, false);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            for (Transaction transaction : transactions) {
+                printWriter.println(transaction.toString());
+            }
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private static void readTransactionsFromCSV(String fileName, TransactionManager transactionManager) {
+        try {
+            File file = new File(fileName);
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] fields = line.split(",");
+
+                LocalDate date = LocalDate.parse(fields[0]);
+                LocalTime time = LocalTime.parse(fields[1]);
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactionManager.addTransaction(transaction);
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found.");
+        }
+    }
+}
