@@ -70,8 +70,8 @@ public class FinancialTracker {
         transaction.put("date", scanner.nextLine());
 
         // Prompt the user to enter transaction details
-        System.out.print("Time (HH:MM:SS): ");
-        transaction.put("time", scanner.nextLine());
+        System.out.print("Time (HH:MM): ");
+        transaction.put("time", scanner.nextLine() + ":00");
 
         System.out.print("Description: ");
         transaction.put("description", scanner.nextLine());
