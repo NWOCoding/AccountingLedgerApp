@@ -85,20 +85,28 @@ public class FinancialTracker {
         return transaction;
     }
 
+    // This method creates a new Transaction object from a HashMap containing transaction details
     private static Transaction createTransaction(HashMap<String, String> transactionMap) {
+        // Parse the transaction details from the HashMap
         LocalDate date = LocalDate.parse(transactionMap.get("date"));
         LocalTime time = LocalTime.parse(transactionMap.get("time"));
         String description = transactionMap.get("description");
         String vendor = transactionMap.get("vendor");
         double amount = Double.parseDouble(transactionMap.get("amount"));
+        // Create a new Transaction object with the parsed details
         return new Transaction(date, time, description, vendor, amount);
     }
 
+    // This method adds a transaction to the CSV file
     private static void addTransactionToCSV(Transaction transaction) {
         try {
+            // Open the CSV file for writing
             FileWriter fileWriter = new FileWriter(FILENAME, true);
+            // Create a PrintWriter for writing to the file
             PrintWriter printWriter = new PrintWriter(fileWriter);
+            // Close the PrintWriter and FileWriter
             printWriter.println(transaction.toString());
+
             printWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,9 +115,13 @@ public class FinancialTracker {
 
     private static void updateTransactionCSV(List<Transaction> transactions) {
         try {
+            // Open the CSV file for writing, overwriting any existing data
             FileWriter fileWriter = new FileWriter(FILENAME, false);
+            // Create a PrintWriter for writing to the file
             PrintWriter printWriter = new PrintWriter(fileWriter);
+            // Loop over each transaction in the list
             for (Transaction transaction : transactions) {
+                // Write the transaction details to the file
                 printWriter.println(transaction.toString());
             }
             printWriter.close();
@@ -117,21 +129,26 @@ public class FinancialTracker {
             e.printStackTrace();
         }
     }
+    // This method reads transactions from a CSV file and adds them to a TransactionManager
     private static void readTransactionsFromCSV(String fileName, TransactionManager transactionManager) {
         try {
+            // Open the CSV file for reading
             File file = new File(fileName);
             Scanner scanner = new Scanner(file);
-
+            // Loop over each line in the file
             while (scanner.hasNextLine()) {
+                // Read the line and split it into fields
                 String line = scanner.nextLine();
                 String[] fields = line.split(",");
 
+                // Parse the transaction details from the fields
                 LocalDate date = LocalDate.parse(fields[0]);
                 LocalTime time = LocalTime.parse(fields[1]);
                 String description = fields[2];
                 String vendor = fields[3];
                 double amount = Double.parseDouble(fields[4]);
 
+                // Create a new Transaction object with the parsed details and add it to the TransactionManager
                 Transaction transaction = new Transaction(date, time, description, vendor, amount);
                 transactionManager.addTransaction(transaction);
             }
