@@ -4,13 +4,19 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class FinancialTracker {
+    // The name of the CSV file where transaction data is stored
     private static final String FILENAME = "transactions.csv";
 
     public static void main(String[] args) {
+        // Create a new Scanner object to read input from the user
         Scanner scanner = new Scanner(System.in);
+        // Declare a HashMap to hold transaction details
+
         HashMap<String, String> transaction;
+        // Create a new TransactionManager object to manage transactions
         TransactionManager transactionManager = new TransactionManager();
 
+        // Main program loop
         while (true) {
             System.out.println("Financial Tracker\n");
             System.out.println("D) Add Deposit");
@@ -18,28 +24,30 @@ public class FinancialTracker {
             System.out.println("L) Ledger");
             System.out.println("X) Exit\n");
 
+            // Prompt the user to select an option
             System.out.print("Select an option: ");
             String choice = scanner.nextLine().toUpperCase();
 
+            // Handle the user's choice
             switch (choice) {
-                case "D":
-                    transaction = readTransactionFromUser("Deposit");
-                    Transaction deposit = createTransaction(transaction);
-                    transactionManager.addTransaction(deposit);
-                    addTransactionToCSV(deposit);
+                case "D": // Add a deposit
+                    transaction = readTransactionFromUser("Deposit");  // Prompt the user to enter deposit details
+                    Transaction deposit = createTransaction(transaction);   // Create a new Transaction object from the user's input
+                    transactionManager.addTransaction(deposit);              // Add the transaction to the TransactionManager
+                    addTransactionToCSV(deposit);                             // Add the transaction to the CSV file
                     System.out.println("\nDeposit saved.\n");
                     break;
-                case "P":
+                case "P":   // Make a payment
                     transaction = readTransactionFromUser("Payment");
                     Transaction payment = createTransaction(transaction);
                     transactionManager.addTransaction(payment);
                     addTransactionToCSV(payment);
                     System.out.println("\nPayment saved.\n");
                     break;
-                case "L":
+                case "L":  // Display the ledger
                     transactionManager.displayLedger();
                     break;
-                case "X":
+                case "X": // Exit the program
                     System.out.println("\nExiting program.");
                     System.exit(0);
                     break;
@@ -50,14 +58,18 @@ public class FinancialTracker {
         }
     }
 
+    // Prompt the user to enter transaction details and return a HashMap of the input
     private static HashMap<String, String> readTransactionFromUser(String type) {
+        // Create a new Scanner object to read input from the user
         Scanner scanner = new Scanner(System.in);
+        // Declare a HashMap to hold transaction details
         HashMap<String, String> transaction = new HashMap<>();
 
         System.out.println("\nEnter " + type + " details:");
         System.out.print("Date (YYYY-MM-DD): ");
         transaction.put("date", scanner.nextLine());
 
+        // Prompt the user to enter transaction details
         System.out.print("Time (HH:MM:SS): ");
         transaction.put("time", scanner.nextLine());
 
